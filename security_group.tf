@@ -30,6 +30,16 @@ resource "aws_security_group_rule" "alb_sg_in_https" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "alb_sg_out_all" {
+  security_group_id = aws_security_group.alb_sg.id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"  # すべてのプロトコル
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow all outbound traffic"
+}
+
 resource "aws_security_group" "app_sg" {
   name        = "${var.project}-${var.environment}-sg-app"
   description = "${var.project}-${var.environment}-sg-app"
@@ -52,6 +62,16 @@ resource "aws_security_group_rule" "app_sg_in_http" {
   source_security_group_id = aws_security_group.alb_sg.id
 }
 
+resource "aws_security_group_rule" "app_sg_out_all" {
+  security_group_id = aws_security_group.app_sg.id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow all outbound traffic"
+}
+
 resource "aws_security_group" "db_sg" {
   name        = "${var.project}-${var.environment}-sg-db"
   description = "${var.project}-${var.environment}-sg-db"
@@ -72,4 +92,14 @@ resource "aws_security_group_rule" "db_sg_in_postgres" {
   to_port                  = 5432
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.app_sg.id
+}
+
+resource "aws_security_group_rule" "db_sg_out_all" {
+  security_group_id = aws_security_group.db_sg.id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow all outbound traffic"
 }
