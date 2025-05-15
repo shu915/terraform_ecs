@@ -35,7 +35,7 @@ resource "aws_security_group_rule" "alb_sg_out_all" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
-  protocol          = "-1"  # すべてのプロトコル
+  protocol          = "-1" # すべてのプロトコル
   cidr_blocks       = ["0.0.0.0/0"]
   description       = "Allow all outbound traffic"
 }
