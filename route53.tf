@@ -3,9 +3,9 @@ resource "aws_route53_zone" "route53_zone" {
   force_destroy = false
 
   tags = {
-    Name    = "${var.project}-${var.environment}-domain"
-    Project = var.project
-    Env     = var.environment
+    Name        = "${var.project}-${var.environment}-domain"
+    Project     = var.project
+    Environment = var.environment
   }
 }
 
