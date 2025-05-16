@@ -23,3 +23,15 @@ variable "environment" {
 variable "domain" {
   type = string
 }
+
+variable "aws_account_id" {
+  type = string
+}
+
+variable "github_repo" {
+  type = string
+}
+
+variable "secret_manager_arn" {
+  type = string
+}
