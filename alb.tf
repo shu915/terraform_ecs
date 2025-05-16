@@ -13,10 +13,11 @@ resource "aws_lb" "alb" {
 }
 
 resource "aws_lb_target_group" "alb_target_group" {
-  name     = "${var.project}-${var.environment}-alb-tg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.vpc.id
+  name        = "${var.project}-${var.environment}-alb-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.vpc.id
+  target_type = "ip"
 
   health_check {
     path                = "/"
