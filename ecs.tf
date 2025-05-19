@@ -54,7 +54,15 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
         {
           name  = "RAILS_ENV"
           value = "production"
-        }
+        },
+        {
+          name  = "AWS_BUCKET"
+          value = aws_s3_bucket.s3_bucket.bucket
+        },
+        {
+          name  = "RAILS_SERVE_STATIC_FILES"
+          value = "true"
+        },
       ]
     }
   ])

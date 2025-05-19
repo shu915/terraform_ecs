@@ -78,7 +78,7 @@ data "aws_iam_policy_document" "github_actions_role_policy" {
   }
 }
 
-# GitHub ActionsからCDできるようにする
+
 resource "aws_iam_role" "github_actions_role" {
   name               = "${var.project}-${var.environment}-github-actions-role"
   assume_role_policy = data.aws_iam_policy_document.github_actions_role_policy.json
