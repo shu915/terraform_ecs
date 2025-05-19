@@ -20,7 +20,7 @@ resource "aws_lb_target_group" "alb_target_group" {
   target_type = "ip"
 
   health_check {
-    path                = "/"
+    path                = "/healthcheck"
     protocol            = "HTTP"
     matcher             = "200"
     interval            = 30

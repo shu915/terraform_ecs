@@ -37,5 +37,5 @@ resource "aws_s3_bucket_policy" "s3_bucket_policy" {
   depends_on = [
     aws_s3_bucket_public_access_block.s3_bucket_public_access_block,
     aws_s3_bucket_versioning.s3_bucket_versioning
-  ]   
+  ]
 }
