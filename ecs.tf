@@ -23,14 +23,14 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          awslogs-group  = aws_cloudwatch_log_group.ecs_logs.name
-          awslogs-region = "ap-northeast-1"
+          awslogs-group         = aws_cloudwatch_log_group.ecs_logs.name
+          awslogs-region        = "ap-northeast-1"
           awslogs-stream-prefix = "ecs"
         }
       }
       secrets = [
         {
-          name = "SECRET_KEY_BASE"
+          name      = "SECRET_KEY_BASE"
           valueFrom = "${var.secret_manager_arn}:SECRET_KEY_BASE::"
         }
       ]
@@ -39,10 +39,11 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
 }
 
 resource "aws_ecs_service" "ecs_service" {
-  name                              = "${var.project}-${var.environment}-ecs-service"
-  cluster                           = aws_ecs_cluster.ecs_cluster.id
-  task_definition                   = aws_ecs_task_definition.ecs_task_definition.arn
-  desired_count                     = 2
+  name            = "${var.project}-${var.environment}-ecs-service"
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.ecs_task_definition.arn
+  #使わないとき0にしておく
+  desired_count                     = 0
   launch_type                       = "FARGATE"
   platform_version                  = "1.4.0"
   health_check_grace_period_seconds = 60
