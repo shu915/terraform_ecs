@@ -23,15 +23,37 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          awslogs-group  = aws_cloudwatch_log_group.ecs_logs.name
-          awslogs-region = "ap-northeast-1"
+          awslogs-group         = aws_cloudwatch_log_group.ecs_logs.name
+          awslogs-region        = "ap-northeast-1"
           awslogs-stream-prefix = "ecs"
         }
       }
       secrets = [
         {
-          name = "SECRET_KEY_BASE"
+          name      = "SECRET_KEY_BASE"
           valueFrom = "${var.secret_manager_arn}:SECRET_KEY_BASE::"
+        },
+        {
+          name      = "DB_NAME"
+          valueFrom = "${var.secret_manager_arn}:DB_NAME::"
+        },
+        {
+          name      = "DB_USER"
+          valueFrom = "${var.secret_manager_arn}:DB_USER::"
+        },
+        {
+          name      = "DB_PASSWORD"
+          valueFrom = "${var.secret_manager_arn}:DB_PASSWORD::"
+        }
+      ]
+      environment = [
+        {
+          name  = "DB_HOST"
+          value = var.db_host
+        },
+        {
+          name  = "RAILS_ENV"
+          value = "production"
         }
       ]
     }
@@ -39,9 +61,10 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
 }
 
 resource "aws_ecs_service" "ecs_service" {
-  name                              = "${var.project}-${var.environment}-ecs-service"
-  cluster                           = aws_ecs_cluster.ecs_cluster.id
-  task_definition                   = aws_ecs_task_definition.ecs_task_definition.arn
+  name            = "${var.project}-${var.environment}-ecs-service"
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.ecs_task_definition.arn
+  #使わないとき0にしておく
   desired_count                     = 2
   launch_type                       = "FARGATE"
   platform_version                  = "1.4.0"

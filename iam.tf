@@ -50,13 +50,25 @@ resource "aws_iam_role_policy_attachment" "ecs_task_role_ses_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSESFullAccess"
 }
 
+# GitHub Actions用のOIDCプロバイダーを設定
+resource "aws_iam_openid_connect_provider" "github_actions" {
+  url = "https://token.actions.githubusercontent.com"
+
+  client_id_list = [
+    "sts.amazonaws.com"
+  ]
+  thumbprint_list = [
+    "6938fd4d98bab03faadb97b34396831e3780aea1"
+  ]
+}
+
 data "aws_iam_policy_document" "github_actions_role_policy" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
     effect  = "Allow"
     principals {
       type        = "Federated"
-      identifiers = ["arn:aws:iam::${var.aws_account_id}:oidc-provider/token.actions.githubusercontent.com"]
+      identifiers = [aws_iam_openid_connect_provider.github_actions.arn]
     }
     condition {
       test     = "StringLike"
@@ -87,9 +99,8 @@ data "aws_iam_policy_document" "github_actions_permissions_policy" {
       "ecs:DescribeServices",
       "ecs:UpdateService",
       "ecs:RegisterTaskDefinition"
-      # 必要な権限を追加
     ]
-    resources = ["*"] # より制限的なリソース指定が望ましい
+    resources = ["*"] 
   }
 }
 

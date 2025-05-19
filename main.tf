@@ -35,3 +35,7 @@ variable "github_repo" {
 variable "secret_manager_arn" {
   type = string
 }
+
+variable "db_host" {
+  type = string
+}
